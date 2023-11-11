@@ -1,0 +1,3 @@
+PKG_LIBS = `$(R_HOME)/bin/Rscript -e "Rcpp:::LdFlags()"` `gsl-config --libs`
+PKG_CPPFLAGS = -I../inst/include
+PKG_LIBS = -lgsl -lgslcblas

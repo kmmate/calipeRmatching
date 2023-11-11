@@ -1,0 +1,14 @@
+Package: calipeRmatching
+Type: Package
+Title: Caliper Matching Estimator for Average Treatment Effects
+Version: 1.0
+Author: Mate Kormos
+Maintainer: Mate Kormos <mate.kormos@runbox.com>
+Description: Caliper matching estimator of the Average Treatment Effect and the Average Treatment Effect on the Treated of a binary treatment. 
+        A treated and a control unit are matched if their propensity scores (either known or estimated parametric) are within a specified distance called the caliper. See [KPV23] <https://arxiv.org/abs/2304.08373> for details.
+URL: https://arxiv.org/abs/2304.08373, https://github.com/kmmate/calipeRmatching, https://github.com/kmmate/caliper_matching
+License: GPL (>= 2)
+Imports: Rcpp (>= 1.0.11)
+LinkingTo: Rcpp
+RoxygenNote: 7.2.3
+Encoding: UTF-8
