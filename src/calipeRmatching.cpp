@@ -61,10 +61,9 @@ int cpp_cm_set_number_of_threads(int nr_threads){
 //'
 // [[Rcpp::export]]
 int cpp_test_cm(){
-    // const Rcpp::Environment global_r_env = Rcpp::Environment::global_env();
-    // const int estimated_number_of_threads = global_r_env["N_THREADS"];
-    // Rprintf("You have %d processors.\n", std::thread::hardware_concurrency());
-    // Rprintf("You have %d processors.\n", NUM_THREADS);
+    if (CM_VERBOSE_MODE){
+        Rprintf("You have %d processors.\n", NUM_THREADS);
+    }
     test_cm();
     return 0;
 }
@@ -157,8 +156,7 @@ Rcpp::List cpp_cm_cm_known_propscore(const Rcpp::NumericVector y, // outcome var
     // process inputs
     // int n = y->size; // if `y` is RcppGSL::vector<double> type
     if (!((y.size() == d.size()) && (d.size() == propscore.size()))){  // sanity check
-        Rprintf("%s: line %d: input check failed: `y`, `d`, `propscore` must have same length; now they have `y`.size = %td, `d`.size = %td, `propscore`.size = %td.\n", __FILE__, __LINE__, y.size(), d.size(), propscore.size());
-        Rcpp::stop("");
+        Rcpp::stop("%s: line %d: input check failed: `y`, `d`, `propscore` must have same length; now they have `y`.size = %td, `d`.size = %td, `propscore`.size = %td.\n", __FILE__, __LINE__, y.size(), d.size(), propscore.size());
     };
     int n = y.size();  // if `y` is Rcpp::NumericVector type
     vector *_y = vector_alloc(n);
@@ -383,8 +381,10 @@ Rcpp::List cpp_cm_cm(const Rcpp::NumericVector y, // outcome variable.
     for (int j=0; j<k; j++){
         vector_set(_theta, j, theta[j + 1]);
     }
-    for (int j=0; j<k+1; j++){ // sanity check
-        Rprintf("_theta[%d] = %f.\n", j, vector_get(_theta, j));
+    if (CM_VERBOSE_MODE){
+        for (int j=0; j<k+1; j++){ // sanity check
+            Rprintf("_theta[%d] = %f.\n", j, vector_get(_theta, j));
+        }
     }
     // --- estimate variance
     int _estimate_variance = 0;

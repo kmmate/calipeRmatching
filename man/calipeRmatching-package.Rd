@@ -37,6 +37,8 @@
   The function \code{\link{test_cm}} can be used to run the extensive test suit of the underlying C library.
 
   Functions prepended by `cpp_` are for internal use only.
+
+  Portable version of \code{qsort_r} employed in the package is due to Isaac Turner (noporpose): \href{https://github.com/noporpoise/sort_r}{GitHub}, \href{https://stackoverflow.com/a/14801407}{StackOverflow}.
 }
 \author{
 Mate Kormos

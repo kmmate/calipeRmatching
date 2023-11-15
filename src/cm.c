@@ -11,7 +11,7 @@
 //          indicated by the comment `EDIT_TO_ADD`. In particular,
 //          (0) modify `propscore.c` and `propscore.h` as described
 //              therein; and
-//          (1) adjust `cm_number_of_modeltypes`; and
+//          (1) adjust `CM_NUMBER_OF_MODELTYPES`; and
 //          (2) add the name of the model to the
 //          `CM_FOREACH_MODEL` definition; and
 //          (3) add the new model to the g/ginv/gderiv/ginvderiv arrays.
@@ -23,7 +23,7 @@
 //////////////////      Propensity score utilities
 
 // EDIT_TO_ADD: increase number by J if J new models are added
-const int cm_number_of_modeltypes = 2;
+#define CM_NUMBER_OF_MODELTYPES 2
 
 // EDIT_TO_ADD: add model name
 #define CM_FOREACH_MODEL(MODEL) \
@@ -48,10 +48,10 @@ typedef double (*fnc_ptr)(double);
 // EDIT_TO_ADD: add [mynewmodel] = propscore_<g/ginv/gderiv/ginvderiv>_mynewmodel to
 //              each of the arrays below.
 // order can be arbitrary, [modeltype]=. syntax makes sure it matches those in CM_MODEL_TYPES
-fnc_ptr propscore_g[cm_number_of_modeltypes] = {[logit] = propscore_g_logit, [probit] = propscore_g_probit};
-fnc_ptr propscore_ginv[cm_number_of_modeltypes] = {[logit] = propscore_ginv_logit, [probit] = propscore_ginv_probit};
-fnc_ptr propscore_gderiv[cm_number_of_modeltypes] = {[logit] = propscore_gderiv_logit, [probit] = propscore_gderiv_probit};
-fnc_ptr propscore_ginvderiv[cm_number_of_modeltypes] = {[logit] = propscore_ginvderiv_logit, [probit] = propscore_ginvderiv_probit};
+fnc_ptr propscore_g[CM_NUMBER_OF_MODELTYPES] = {[logit] = propscore_g_logit, [probit] = propscore_g_probit};
+fnc_ptr propscore_ginv[CM_NUMBER_OF_MODELTYPES] = {[logit] = propscore_ginv_logit, [probit] = propscore_ginv_probit};
+fnc_ptr propscore_gderiv[CM_NUMBER_OF_MODELTYPES] = {[logit] = propscore_gderiv_logit, [probit] = propscore_gderiv_probit};
+fnc_ptr propscore_ginvderiv[CM_NUMBER_OF_MODELTYPES] = {[logit] = propscore_ginvderiv_logit, [probit] = propscore_ginvderiv_probit};
 
 // const char *modeltypes[] = {"logit", "probit"};
 //  note: order must correspond to that in *modeltypes[]
@@ -92,12 +92,12 @@ pthread_mutex_t mutex_lock = PTHREAD_MUTEX_INITIALIZER;
 
 // Finds index of propensity score model type `modeltype` in CM_MODEL_TYPES_CHAR.
 int cm_find_modeltype_index(char *modeltype){
-    for (size_t i = 0; i < cm_number_of_modeltypes; i++){
+    for (size_t i = 0; i < CM_NUMBER_OF_MODELTYPES; i++){
         if (!strcmp(modeltype, CM_MODEL_TYPES_CHAR[i])){
             return i;
         }
     }
-    return cm_number_of_modeltypes + 1; // out of range
+    return CM_NUMBER_OF_MODELTYPES + 1; // out of range
 }
 
 
@@ -265,9 +265,28 @@ void test_vector_sort_index_ptr(void){
     Rprintf("Tests for `vector_sort_index_ptr` completed: no issues found.\n");
 }
 
+
 /*
 Comparison function of two size_t objects.  Used by `vector_sort_index`.
 Whichever pointer indexes a larger element in `v` is considered the larger.
+
+To be used with `sort_r`.
+*/
+int vector_sort_index_compare_sort_r(const void *p_left, const void *p_right, void *vv){
+    vector *v = (vector *)vv;
+    const size_t left = *(const size_t *)p_left;
+    const size_t right = *(const size_t *)p_right;
+    double v_left, v_right;
+    v_left = vector_get(v, left);
+    v_right = vector_get(v, right);
+    return (v_left > v_right) - (v_left < v_right);
+}
+
+/*
+Comparison function of two size_t objects.  Used by `vector_sort_index`.
+Whichever pointer indexes a larger element in `v` is considered the larger.
+
+To be used with `qsort_r`.
 */
 int vector_sort_index_compare(void *vv, const void *p_left, const void *p_right){
     vector *v = (vector *)vv;
@@ -297,7 +316,8 @@ size_t *vector_sort_index(vector *v){
     for (int i = 0; i < v->size; i++){
         sort_index[i] = i;
     }
-    qsort_r(sort_index, v->size, sizeof(sort_index[0]), (void *)v, vector_sort_index_compare);
+    // qsort_r(sort_index, v->size, sizeof(sort_index[0]), (void *)v, vector_sort_index_compare);
+    sort_r(sort_index, v->size, sizeof(sort_index[0]), vector_sort_index_compare_sort_r, (void *)v);
     return sort_index;
 }
 
@@ -346,14 +366,14 @@ int cm_cmmodel_init_check_values(CMModel *cmm, int test_mode){
     }
     // modeltype check
     int is_modeltype_in_modeltypes = 1;
-    for (int i = 0; i < cm_number_of_modeltypes; i++){
+    for (int i = 0; i < CM_NUMBER_OF_MODELTYPES; i++){
         is_modeltype_in_modeltypes *= strcmp(cmm->modeltype, CM_MODEL_TYPES_CHAR[i]);
     }
     if (is_modeltype_in_modeltypes){
         if (!test_mode){
             Rprintf("%s: line %d: CMModel input check failed: `modeltype` '%s' is not supported for propensity score.\n", __FILE__, __LINE__, cmm->modeltype);
             Rprintf("Available options are:\n");
-            for (int i = 0; i < cm_number_of_modeltypes; i++){
+            for (int i = 0; i < CM_NUMBER_OF_MODELTYPES; i++){
                 Rprintf("%s\n", CM_MODEL_TYPES_CHAR[i]);
             }
         }
@@ -451,14 +471,14 @@ int cm_cmmodel_check_values(CMModel *cmm, int test_mode){
     }
     // modeltype check
     int is_modeltype_in_modeltypes = 1;
-    for (int i = 0; i < cm_number_of_modeltypes; i++){
+    for (int i = 0; i < CM_NUMBER_OF_MODELTYPES; i++){
         is_modeltype_in_modeltypes *= strcmp(cmm->modeltype, CM_MODEL_TYPES_CHAR[i]);
     }
     if (is_modeltype_in_modeltypes){
         if (!test_mode){
             Rprintf("%s: line %d: CMModel input check failed: `modeltype` '%s' is not supported for propensity score.\n", __FILE__, __LINE__, cmm->modeltype);
             Rprintf("Available options are:\n");
-            for (int i = 0; i < cm_number_of_modeltypes; i++){
+            for (int i = 0; i < CM_NUMBER_OF_MODELTYPES; i++){
                 Rprintf("%s\n", CM_MODEL_TYPES_CHAR[i]);
             }
         }
@@ -2717,7 +2737,8 @@ void cm_te_estimator(CMModelKnownPropscore *cm_model, CMResults *results){
 
 
 // Returns one if unit `i` is treated, zero otherwise.
-int cm_kernel_filter_func(size_t i, void *filter_args){
+// int cm_kernel_filter_func(size_t i, void *filter_args){
+int cm_kernel_filter_func(unsigned long int i, void *filter_args){
     vector_short *d = (vector_short *)filter_args;
     return vector_short_get(d, i);
 }
@@ -3676,7 +3697,6 @@ void *cm_variance_estimator_thread(void *thread_arguments){
 
 // Estimates asymptotic variance variance of matching estimator
 int cm_variance_estimator(CMModelKnownPropscore *cm_model, CMResults *results){
-    Rprintf("NUM_THREADS = %d.\n", NUM_THREADS);
     // if variance is not to be estimated, halt and return zero
     if (!(cm_model->estimate_variance)){
         results->var_hat_ate = 0.0;
@@ -3807,6 +3827,7 @@ int cm_variance_estimator(CMModelKnownPropscore *cm_model, CMResults *results){
     results->var_hat_component_sigmapi_att = var_sigmapi_treated;
     results->var_hat_component_estpi_ate = var_estpi;
     results->var_hat_component_estpi_att = var_estpi_treated;
+    return 0;
 }
 
 typedef struct CMThreadArgumentsMaxmin {

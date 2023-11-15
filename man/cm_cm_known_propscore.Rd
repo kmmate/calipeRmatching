@@ -30,17 +30,17 @@ data-driven value is used (recommended). If a positive value is passed, that is 
 \item{estimate_variance}{\code{logical} variable. If \code{TRUE}, the variances of the estimators are estimated.
 If \code{FALSE}, no variance estimates are provided; this is useful to speed up execution.}
 
-\item{beta}{a positive \code{numeric} variable, negative-exponent of bandwidth sequence \code{gamma_n} = \code{kappa_gamma} * \eqn{n} ^ {(-\code{beta})} in nonparametric variance estimation. 
+\item{beta}{a positive \code{numeric} variable, negative-exponent of bandwidth sequence \code{gamma_n} = \code{kappa_gamma} * \eqn{n} ^ (-\code{beta}) in nonparametric variance estimation. 
 If zero  is passed, it is the default value (recommended), otherwise it is equal to the passed value.}
 
-\item{alpha}{a positive \code{numeric} variable, negative-exponent of truncation sequence \code{a_n} = \code{kappa_a} * \eqn{n} ^ {(-\code{alpha})} in nonparametric variance estimation. 
+\item{alpha}{a positive \code{numeric} variable, negative-exponent of truncation sequence \code{a_n} = \code{kappa_a} * \eqn{n} ^ (-\code{alpha}) in nonparametric variance estimation. 
 If zero  is passed, it is the default value (recommended), otherwise it is equal to the passed value. 
 Must be strictly smaller than \code{beta}.}
 
-\item{kappa_a}{a positive \code{numeric} variable, scale of truncation sequence \code{a_n} = \code{kappa_a} * \eqn{n} ^ {(-\code{alpha})} in nonparametric variance estimation. 
+\item{kappa_a}{a positive \code{numeric} variable, scale of truncation sequence \code{a_n} = \code{kappa_a} * \eqn{n} ^ (-\code{alpha}) in nonparametric variance estimation. 
 If zero  is passed, it is the default value, otherwise it is equal to the passed value.}
 
-\item{kappa_gamma}{a positive \code{numeric} variable, scale of bandwidth sequence \code{gamma_n} = \code{kappa_gamma} * \eqn{n} ^ {(-\code{beta})} in nonparametric variance estimation. 
+\item{kappa_gamma}{a positive \code{numeric} variable, scale of bandwidth sequence \code{gamma_n} = \code{kappa_gamma} * \eqn{n} ^ (-\code{beta}) in nonparametric variance estimation. 
 If zero is passed, it is the default value, otherwise it is equal to the passed value.}
 }
 \value{
@@ -62,8 +62,8 @@ A \code{List}, results from caliper matching estimation with elements:
 \item \code{matched_pairs}: a 2-by-(number of matched pairs) \code{matrix}. A column with value \eqn{(i,j)} indicates that units \eqn{i} and \eqn{j} are matched. Indices start from 1, as opposed to from 0.  
 \item \code{var_estimation_settings}: a \code{List} with elements \itemize{
      \item \code{estimate_variance}: whether variance estimation is performed (\code{estimate_variance=TRUE}), or not (\code{estimate_variance=FALSE}).
-     \item \code{a_n}: value of truncation sequence in nonparametric variance estimation. Equal to \code{kappa_a} * \eqn{n} ^ {(-\code{alpha})}.
-     \item \code{gamma_n}:  value of bandwidth in nonparametric variance estimation. Equal to \code{kappa_gamma} * \eqn{n} ^ {(-\code{beta})}.
+     \item \code{a_n}: value of truncation sequence in nonparametric variance estimation. Equal to \code{kappa_a} * \eqn{n} ^ (-\code{alpha}).
+     \item \code{gamma_n}:  value of bandwidth in nonparametric variance estimation. Equal to \code{kappa_gamma} * \eqn{n} ^ (-\code{beta}).
      \item \code{beta}: negative-exponent of bandwidth sequence in nonparametric variance estimation that is actually used. If zero was passed, it is the default value, otherwise it is equal to the passed value.
      \item \code{alpha}: negative-exponent of truncation sequence in nonparametric variance estimation that is actually used. If zero was passed, it is the default value, otherwise it is equal to the passed value.
      \item \code{kappa_gamma}: scale of bandwidth sequence in nonparametric variance estimation that is actually used. If zero was passed, it is the default value, otherwise it is equal to the passed value.

@@ -25,10 +25,11 @@ extern "C" {
     #include "dynamicarray.h"
     #include "propscore.h"
     #include "nonpara.h"
+    #include "sort_r.h"
 
     // variables
     #define CM_TEST_DOUBLE_TOLERANCE_NPOWER 10
-    #define CM_VERBOSE_MODE 1  // printing for debugging: set to 0 for no printing, to 1 for printing
+    #define CM_VERBOSE_MODE 0  // printing for debugging: set to 0 for no printing, to 1 for printing
     // #define NUM_THREADS  8
     extern int NUM_THREADS;   // to be determined by the cpp file using cm.h and cm.c
     extern const int cm_number_of_modeltypes;
