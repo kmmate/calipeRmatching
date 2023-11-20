@@ -3542,7 +3542,7 @@ void *cm_variance_estimator_thread(void *thread_arguments){
         npower_gamma = thread_args->cm_model->beta;
     }
     if (thread_args->cm_model->kappa_gamma == 0.0){  //if zero scale is supplied, use default value
-        kappa_gamma = 0.5; // default value
+        kappa_gamma = 0.2; // default value
     } else {
         kappa_gamma = thread_args->cm_model->kappa_gamma;
     }

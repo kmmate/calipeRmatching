@@ -252,7 +252,7 @@ test_cm <- function(){
 #'               ate_ci95_low, ate_ci95_high))
 #'
 #' @export
-cm_cm_known_propscore <- function(y, d, propscore, delta, estimate_variance = TRUE, beta = 1/4.000000001, alpha = 1/4.000000002, kappa_a = 10^(-15), kappa_gamma = 0.5){
+cm_cm_known_propscore <- function(y, d, propscore, delta, estimate_variance = TRUE, beta = 1/4.000000001, alpha = 1/4.000000002, kappa_a = 10^(-15), kappa_gamma = 0.2){
     # basic error checks; the c function has substantial error handling
     # --- make sure inputs are numeric, not factors or strings etc
     if (!is.numeric(y)){
@@ -361,7 +361,7 @@ cm_cm_known_propscore <- function(y, d, propscore, delta, estimate_variance = TR
 #'      \item \code{estimate_variance}: whether variance estimation is performed (\code{estimate_variance=TRUE}), or not (\code{estimate_variance=FALSE}).
 #'      \item \code{a_n}: value of truncation sequence in nonparametric variance estimation. Equal to \code{kappa_a} * \eqn{n} ^ (-\code{alpha}).
 #'      \item \code{gamma_n}:  value of bandwidth in nonparametric variance estimation. Equal to \code{kappa_gamma} * \eqn{n} ^ (-\code{beta}).
-#'      \item \code{gamma_derivative_n}: value of bandwidth in nonparametric variance estimation used in derivative estimation w.r.t. propensity score parameter \eqn{\theta}. Equal to \code{kappa_gamma_derivative} * \eqn{n} ^ {(-\code{beta})}.
+#'      \item \code{gamma_derivative_n}: value of bandwidth in nonparametric variance estimation used in derivative estimation w.r.t. propensity score parameter \eqn{\theta}. Equal to \code{kappa_gamma_derivative} * \eqn{n} ^ (-\code{beta}).
 #'      \item \code{beta}: negative-exponent of bandwidth in nonparametric variance estimation that is actually used. If zero was passed, it is the default value, otherwise it is equal to the passed value.
 #'      \item \code{alpha}: negative-exponent of truncation sequence in nonparametric variance estimation that is actually used. If zero was passed, it is the default value, otherwise it is equal to the passed value.
 #'      \item \code{kappa_gamma}: scale of bandwidth sequence in nonparametric variance estimation that is actually used. If zero was passed, it is the default value, otherwise it is equal to the passed value.
@@ -538,7 +538,7 @@ cm_cm_known_propscore <- function(y, d, propscore, delta, estimate_variance = TR
 #'               ate_ci95_low, ate_ci95_high)) 
 #'
 #' @export
-cm_cm_estimated_propscore <- function(y, d, x, modeltype, theta_hat, delta, estimate_variance = TRUE, beta = 1/4.000000001, alpha = 1/4.000000002, kappa_a = 10^(-15), kappa_gamma = 0.5, kappa_gamma_derivative = 0.5){
+cm_cm_estimated_propscore <- function(y, d, x, modeltype, theta_hat, delta, estimate_variance = TRUE, beta = 1/4.000000001, alpha = 1/4.000000002, kappa_a = 10^(-15), kappa_gamma = 0.2, kappa_gamma_derivative = 0.5){
     # basic error checks; the c function has substantial error handling
     # --- make sure inputs are right format
     if (!is.numeric(y)){

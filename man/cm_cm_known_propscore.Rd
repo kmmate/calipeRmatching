@@ -13,7 +13,7 @@ cm_cm_known_propscore(
   beta = 1/4.000000001,
   alpha = 1/4.000000002,
   kappa_a = 10^(-15),
-  kappa_gamma = 0.5
+  kappa_gamma = 0.2
 )
 }
 \arguments{
